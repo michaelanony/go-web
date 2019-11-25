@@ -48,11 +48,17 @@ func init(){
 }
 
 type User struct{
-	Id int
-	Name string
-	Num string
-	Password string
-	Logo string
-	Age int
+	Id int `json:"id" form:"id"`
+	Name string `json:"name" form:"name"`
+	Num string `json:"num" form:"num"`
+	Password string `json:"password" form:"password"`
+	Logo string `json:"logo" form:"logo"`
+	Age int `json:"age" form:"age"`
+}
+
+func UserAll()([]User,error){
+	mods:=make([]User,0)
+	err:=DB.Select(&mods,"SELECT * FROM `goUser`")
+	return mods,err
 }
 
