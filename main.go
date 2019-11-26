@@ -21,6 +21,7 @@ func userAll(w http.ResponseWriter,r *http.Request)  {
 	w.Header().Set("Content-Type","application/json")
 	w.Write(buf)
 }
+
 func main() {
 	http.HandleFunc(`/`,listView)
 	http.HandleFunc(`/user`,userAll)
