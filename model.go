@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -13,7 +14,6 @@ func init(){
 	JsonParse :=NewJsonStruct()
 	v := MainConfig{}
 	JsonParse.Load("./config.json",&v)
-	fmt.Println("sss",v.Host,v.Pwd)
 	DB,err = sqlx.Open(`mysql`,
 		v.User+`:`+v.Pwd+`@tcp(`+v.Host+`)/homedb?charset=utf8&parseTime=true`)
 	if err!=nil{
@@ -36,12 +36,21 @@ type User struct{
 //获取所有用户信息
 func UserAll()([]User,error){
 	mods:=make([]User,0)
-	err:=DB.Select(&mods,"SELECT * FROM `goUser`")
+	err:=DB.Select(&mods,"SELECT * FROM `goUser`")//select一个集合
 	return mods,err
 }
 //获取一条信息
-//func Userone()([]User,error){
+func UseOne()(User,error){
+	mods:=User{}
+	err:=DB.Get(&mods,"SELECT * FROM goUser WHERE id = ?",1)
+	return mods,err
+}
 //
-//}
-
+func Update()(sql.Result,error){
+	ret,err :=DB.Exec("UPDATE goUser SET name = ? WHERE  id = ?","test",1)
+	rows,_:=ret.RowsAffected()
+	lastId,_:=ret.LastInsertId()
+	fmt.Printf("Last inserted id is %v,row is %v",lastId,rows)
+	return ret,err
+}
 

@@ -21,10 +21,23 @@ func userAll(w http.ResponseWriter,r *http.Request)  {
 	w.Header().Set("Content-Type","application/json")
 	w.Write(buf)
 }
-
+func userOne(w http.ResponseWriter,r *http.Request)  {
+	mods,_:=UseOne()
+	buf,_:=json.Marshal(mods)
+	w.Header().Set("Content-Type","application/json")
+	w.Write(buf)
+}
+func update(w http.ResponseWriter,r *http.Request){
+	mods,_:=Update()
+	buf,_:=json.Marshal(mods)
+	w.Header().Set("Content-Type","application/json")
+	w.Write(buf)
+}
 func main() {
 	http.HandleFunc(`/`,listView)
 	http.HandleFunc(`/user`,userAll)
-	http.ListenAndServe(":80",nil)
+	http.HandleFunc(`/user1`,userOne)
+	http.HandleFunc(`/userupdate`,update)
+	http.ListenAndServe(":8081",nil)
 	fmt.Println("run")
 }
